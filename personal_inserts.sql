@@ -114,3 +114,24 @@ SELECT MAX(sal_emp), MIN(sal_emp),( MAX(sal_emp)- MIN(sal_emp)) AS "diferencia e
 
 SELECT AVG(sal_emp), cargo_emp FROM empleados GROUP BY cargo_emp; -- Hallar el salario promedio por departamento.
 
+SELECT AVG(e.sal_emp), e.cargo_emp, d.departamento FROM empleados e, departamentos d where e.id_depto = d.id_depto GROUP BY cargo_emp; -- Hallar el salario promedio por departamento.
+
+-- Consulta con Having
+SELECT dp.nombre_depto, dp.dirigidos, e.id_emp, e.cod_jefe, e.nombre, e.cargo_emp FROM (SELECT nombre_depto, e.id_depto, count(nombre_depto)-1 
+AS dirigidos FROM departamentos d LEFT JOIN empleados e ON e.id_depto = d.id_depto GROUP BY nombre_depto HAVING count((nombre_depto)-1)>=2) dp
+
+LEFT JOIN empleados e ON dp.id_depto = e.id_depto WHERE cargo_emp LIKE '%jefe%';
+SELECT e.cod_jefe, e.nombre, count(*)  FROM empleados e, departamentos d WHERE d.id_depto = e.id_depto GROUP BY e.cod_jefe HAVING count(*) >= 2;
+-- Mostrar el código y nombre de cada jefe, junto al número de empleados que dirige. Solo los que tengan más de dos empleados (2 incluido).
+
+DELETE FROM empleados WHERE (`id_emp` = '222'); -- Hallar los departamentos que no tienen empleados (Se borro un empleado para verificar que algun departamento no tenga empleado)
+
+SELECT nombre_depto as 'Departamento sin Empleados' FROM departamentos d LEFT JOIN empleados e ON d.id_depto = e.id_depto WHERE e.id_emp IS NULL;
+
+-- Consulta con Subconsulta
+SELECT nombre 'Nombre Empleado', sal_emp 'Salario mayor o igual al promedio' FROM empleados  WHERE sal_emp >= (SELECT AVG(sal_emp) FROM empleados);
+-- Mostrar la lista de los empleados cuyo salario es mayor o igual que el promedio de la empresa. Ordenarlo por departamento.
+
+
+
+
